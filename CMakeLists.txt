@@ -91,7 +91,10 @@ if(WIN32)
        advapi32)
 endif()
 
-add_executable(MotorSimulation  ${START_DIR}/modifiedPMSM_Model_ert_rtw/main.c)
+
+add_executable(MotorSimulation  
+    ert_main.c 
+)
 set_target_properties(MotorSimulation PROPERTIES
     PREFIX ""
     POSITION_INDEPENDENT_CODE ON)

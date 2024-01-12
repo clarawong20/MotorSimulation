@@ -19,7 +19,9 @@
 
 #include <stddef.h>
 #include <stdio.h>            /* This example main program uses printf/fflush */
+#include "rtwtypes.h"
 #include "modifiedPMSM_Model.h"        /* Model header file */
+
 
 /*
  * Associating rt_OneStep with a real-time clock or interrupt service routine
@@ -85,10 +87,15 @@ int_T main(int_T argc, const char *argv[])
   while ((rtmGetErrorStatus(modifiedPMSM_Model_M) == (NULL)) &&
          !rtmGetStopRequested(modifiedPMSM_Model_M)) {
     rt_OneStep();
+    printf("Theta Output: %f \n", modifiedPMSM_Model_Y.ThetaOutput);
   }
+
+
+  //TODO: output sin wave for all 3 pwm periods. Offset by 120 (sin waves equally spaced out)
 
   /* Terminate model */
   modifiedPMSM_Model_terminate();
+  
   return 0;
 }
 

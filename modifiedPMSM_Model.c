@@ -430,9 +430,3 @@ void modifiedPMSM_Model_terminate(void)
 {
   /* (no terminate code required) */
 }
-
-/*
- * File trailer for generated code.
- *
- * [EOF]
- */
