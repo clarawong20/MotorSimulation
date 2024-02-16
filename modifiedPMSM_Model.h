@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.14
+ * Model version                  : 2.19
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Fri Nov 17 16:35:33 2023
+ * C/C++ source code generated on : Wed Jan 24 12:24:01 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -28,6 +28,7 @@
 
 #include "modifiedPMSM_Model_types.h"
 #include <string.h>
+#include <math.h>
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetErrorStatus
@@ -73,6 +74,10 @@ typedef struct {
   real_T Integrator1_CSTATE;           /* '<S1>/Integrator1' */
   real_T Integrator2_CSTATE;           /* '<S1>/Integrator2' */
 } X_modifiedPMSM_Model_T;
+
+/* Periodic continuous state vector (global) */
+typedef int_T PeriodicIndX_modifiedPMSM_Mod_T[1];
+typedef real_T PeriodicRngX_modifiedPMSM_Mod_T[2];
 
 /* State derivatives (default storage) */
 typedef struct {
@@ -130,6 +135,9 @@ typedef struct {
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T ThetaOutput;                  /* '<Root>/Output' */
+  real_T SineWave1;
+  real_T SineWave2;
+  real_T SineWave3;
 } ExtY_modifiedPMSM_Model_T;
 
 /* Real-time Model Data Structure */

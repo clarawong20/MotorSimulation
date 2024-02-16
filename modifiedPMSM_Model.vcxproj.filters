@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\clara\Documents\University\McSCert\modifiedPMSM_Model_ert_rtw\ert_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\clara\Documents\University\McSCert\modifiedPMSM_Model_ert_rtw\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="C:\Users\clara\Documents\University\McSCert\modifiedPMSM_Model_ert_rtw\modifiedPMSM_Model_objects.dir\$(Configuration)\modifiedPMSM_Model.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="C:\Users\clara\Documents\University\McSCert\modifiedPMSM_Model_ert_rtw\modifiedPMSM_Model_objects.dir\$(Configuration)\modifiedPMSM_Model_data.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Libraries">
+      <UniqueIdentifier>{B269309F-C05C-377D-BA73-34B1B1DBFAF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6C43DACC-F35B-311C-A723-AEB05E6E7702}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
