@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.19
+ * Model version                  : 2.21
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Wed Jan 24 12:24:01 2024
+ * C/C++ source code generated on : Fri Feb 16 17:19:11 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)

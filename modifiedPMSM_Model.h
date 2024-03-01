@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.19
+ * Model version                  : 2.21
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Wed Jan 24 12:24:01 2024
+ * C/C++ source code generated on : Fri Feb 16 17:19:11 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -132,12 +132,14 @@ typedef struct {
   real_T Gain3_Gain[6];
 } ConstP_modifiedPMSM_Model_T;
 
+/* External inputs (root inport signals with default storage) */
+typedef struct {
+  real_T DutyCycles[3];                /* '<Root>/Duty Cycles' */
+} ExtU_modifiedPMSM_Model_T;
+
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T ThetaOutput;                  /* '<Root>/Output' */
-  real_T SineWave1;
-  real_T SineWave2;
-  real_T SineWave3;
 } ExtY_modifiedPMSM_Model_T;
 
 /* Real-time Model Data Structure */
@@ -191,6 +193,9 @@ extern B_modifiedPMSM_Model_T modifiedPMSM_Model_B;
 
 /* Continuous states (default storage) */
 extern X_modifiedPMSM_Model_T modifiedPMSM_Model_X;
+
+/* External inputs (root inport signals with default storage) */
+extern ExtU_modifiedPMSM_Model_T modifiedPMSM_Model_U;
 
 /* External outputs (root outports fed by signals with default storage) */
 extern ExtY_modifiedPMSM_Model_T modifiedPMSM_Model_Y;

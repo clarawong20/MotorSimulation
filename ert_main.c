@@ -54,9 +54,10 @@ void rt_OneStep(void)
     /* Save FPU context here (if necessary) */
     /* Re-enable timer or interrupt here */
     /* Set model inputs here */
+    
 
     /* Step the model */
-    modifiedPMSM_Model_step();
+    modifiedPMSM_Model_step();     
 
     /* Get model outputs here */
 
@@ -89,13 +90,12 @@ int_T main(int_T argc, const char* argv[])
 
     // ADDED for sine wave
     const float pi = 3.1415926535;
-    //const double sine_frequency  = 6.1; //5 is too low, 8 is too high
     const double sine_amplitude = 0.5;
     const double vertical_shift = 0.5;
     const double phase_offset_2 = 1.0 * 2.0 * pi / 3.0; //120 degree phase offset in radians 
     const double phase_offset_3 = 2.0 * 2.0 * pi / 3.0;
 
-    
+
     /*
     rtb_Product1_p = sine_wave_1;
     rtb_Product1_mi = sine_wave_2;
@@ -113,35 +113,37 @@ int_T main(int_T argc, const char* argv[])
         return -1;
     }
 
-    fprintf(file, "Time, ThetaOutput, SineWave1, SineWave2, SineWave3\n");
+    fprintf(file, "Time, ThetaOutput\n");
 
     /* Simulating the model step behavior (in non real-time) to
      *  simulate model behavior at stop time.
      */
-     //while ((rtmGetErrorStatus(modifiedPMSM_Model_M) == (NULL)) && !rtmGetStopRequested(modifiedPMSM_Model_M)) {
     int loop_counter = 0;
     while ((rtmGetErrorStatus(modifiedPMSM_Model_M) == (NULL)) && currentTime < simulationTime) {
-        rt_OneStep();
-        double Sine_Input = 10.0 * currentTime; // 10 rad/s
-
-        // Calculate three sine waves with 120-degree phase offset
-        double sine_wave_1 = sine_amplitude * sin(Sine_Input) + vertical_shift;
-        double sine_wave_2 = sine_amplitude * sin(Sine_Input + phase_offset_2) + vertical_shift;
-        double sine_wave_3 = sine_amplitude * sin(Sine_Input + phase_offset_3) + vertical_shift;
         
-        // printf("Theta Output: %f \n", modifiedPMSM_Model_Y.ThetaOutput);
-        //printf("Sine Wave 2: %f \n", modifiedPMSM_Model_Y.SineWave1);
-        //printf("Timing: %f \n", modifiedPMSM_Model_M->Timing.t[0]);
-        //printf("Sim Time: %f \n", currentTime);
-
-        if(loop_counter % 1000 == 0) {
-            fprintf(file, "%f,%f,%f,%f\n",
-                currentTime, sine_wave_1, sine_wave_2, sine_wave_3);
-            //currentTime, modifiedPMSM_Model_Y.ThetaOutput,
-            //modifiedPMSM_Model_Y.SineWave1, modifiedPMSM_Model_Y.SineWave2, modifiedPMSM_Model_Y.SineWave3);
+        double Sine_Input = 10.0 * currentTime; // 10 rad/s
+                
+        /* Set duty cycles in the external input structure */
+        for (int i = 0; i < 3; i++) {
+            modifiedPMSM_Model_U.DutyCycles[i] = sine_amplitude * sin(Sine_Input + ((i + 1) * 2.0 * pi / 3)) + vertical_shift;
         }
+
+        /* Step the model with external inputs */
+        modifiedPMSM_Model_step(&modifiedPMSM_Model_U);
+
+        
+        if (loop_counter % 1000 == 0) {
+            fprintf(file, "%f,%f\n",
+            /* for showing the duty cycle sine wave in the excel file */
+            //currentTime, modifiedPMSM_Model_U.DutyCycles[0], modifiedPMSM_Model_U.DutyCycles[1], modifiedPMSM_Model_U.DutyCycles[2]);
+            
+            /* for showing the theta output in the excel file */
+            currentTime, modifiedPMSM_Model_Y.ThetaOutput);
+        }
+        rt_OneStep();
         currentTime += timeStep;
         loop_counter += 1;
+        
     }
 
     fclose(file);
