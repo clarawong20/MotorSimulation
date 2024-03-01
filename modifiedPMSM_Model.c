@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.14
+ * Model version                  : 2.21
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Fri Nov 17 16:35:33 2023
+ * C/C++ source code generated on : Fri Feb 16 17:19:11 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -29,13 +29,36 @@ B_modifiedPMSM_Model_T modifiedPMSM_Model_B;
 /* Continuous states */
 X_modifiedPMSM_Model_T modifiedPMSM_Model_X;
 
+/* External inputs (root inport signals with default storage) */
+ExtU_modifiedPMSM_Model_T modifiedPMSM_Model_U;
+
 /* External outputs (root outports fed by signals with default storage) */
 ExtY_modifiedPMSM_Model_T modifiedPMSM_Model_Y;
+
+/* Periodic continuous states */
+PeriodicIndX_modifiedPMSM_Mod_T modifiedPMSM_Model_PeriodicIndX;
+PeriodicRngX_modifiedPMSM_Mod_T modifiedPMSM_Model_PeriodicRngX;
 
 /* Real-time model */
 static RT_MODEL_modifiedPMSM_Model_T modifiedPMSM_Model_M_;
 RT_MODEL_modifiedPMSM_Model_T *const modifiedPMSM_Model_M =
   &modifiedPMSM_Model_M_;
+
+/* State reduction function */
+void local_stateReduction(real_T* x, int_T* p, int_T n, real_T* r)
+{
+  int_T i, j;
+  for (i = 0, j = 0; i < n; ++i, ++j) {
+    int_T k = p[i];
+    real_T lb = r[j++];
+    real_T xk = x[k]-lb;
+    real_T rk = r[j]-lb;
+    int_T q = (int_T) floor(xk/rk);
+    if (q) {
+      x[k] = xk-q*rk+lb;
+    }
+  }
+}
 
 /*
  * This function updates continuous states using the ODE4 fixed-step
@@ -104,11 +127,14 @@ static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
     x[i] = y[i] + temp*(f0[i] + 2.0*f1[i] + 2.0*f2[i] + f3[i]);
   }
 
+  local_stateReduction(rtsiGetContStates(si), rtsiGetPeriodicContStateIndices(si),
+                       1,
+                       rtsiGetPeriodicContStateRanges(si));
   rtsiSetSimTimeStep(si,MAJOR_TIME_STEP);
 }
 
 /* Model step function */
-void modifiedPMSM_Model_step(void)
+void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
 {
   real_T rtb_TmpSignalConversionAtGain_j[3];
   real_T rtb_alpha_beta[2];
@@ -200,9 +226,9 @@ void modifiedPMSM_Model_step(void)
   rtb_Product1_d = fabs(1.0 - (rtb_Product1_p - floor(rtb_Product1_p)) * 2.0);
 
   /* RelationalOperator: '<S2>/Relational Operator' incorporates:
-   *  Constant: '<Root>/Constant1'
+   *  Inport: '<Root>/Duty Cycles'
    */
-  rtb_RelationalOperator2 = (rtb_Product1_d < 0.2);
+  rtb_RelationalOperator2 = (modifiedPMSM_Model_U.DutyCycles[0] > rtb_Product1_d);
 
   /* Product: '<S13>/Product1' incorporates:
    *  CombinatorialLogic: '<S13>/Leg'
@@ -216,9 +242,9 @@ void modifiedPMSM_Model_step(void)
     1) + (uint32_T)!rtb_RelationalOperator2] * 800.0;
 
   /* RelationalOperator: '<S2>/Relational Operator1' incorporates:
-   *  Constant: '<Root>/Constant2'
+   *  Inport: '<Root>/Duty Cycles'
    */
-  rtb_RelationalOperator2 = (rtb_Product1_d < 0.5);
+  rtb_RelationalOperator2 = (modifiedPMSM_Model_U.DutyCycles[1] > rtb_Product1_d);
 
   /* Product: '<S14>/Product1' incorporates:
    *  CombinatorialLogic: '<S14>/Leg'
@@ -232,9 +258,9 @@ void modifiedPMSM_Model_step(void)
     1) + (uint32_T)!rtb_RelationalOperator2] * 800.0;
 
   /* RelationalOperator: '<S2>/Relational Operator2' incorporates:
-   *  Constant: '<Root>/Constant3'
+   *  Inport: '<Root>/Duty Cycles'
    */
-  rtb_RelationalOperator2 = (rtb_Product1_d < 0.7);
+  rtb_RelationalOperator2 = (modifiedPMSM_Model_U.DutyCycles[2] > rtb_Product1_d);
 
   /* SignalConversion generated from: '<S1>/Gain1' incorporates:
    *  CombinatorialLogic: '<S15>/Leg'
@@ -405,6 +431,10 @@ void modifiedPMSM_Model_initialize(void)
   modifiedPMSM_Model_M->intgData.f[3] = modifiedPMSM_Model_M->odeF[3];
   modifiedPMSM_Model_M->contStates = ((X_modifiedPMSM_Model_T *)
     &modifiedPMSM_Model_X);
+  modifiedPMSM_Model_M->periodicContStateIndices = ((int_T*)
+    modifiedPMSM_Model_PeriodicIndX);
+  modifiedPMSM_Model_M->periodicContStateRanges = ((real_T*)
+    modifiedPMSM_Model_PeriodicRngX);
   rtsiSetSolverData(&modifiedPMSM_Model_M->solverInfo, (void *)
                     &modifiedPMSM_Model_M->intgData);
   rtsiSetIsMinorTimeStepWithModeChange(&modifiedPMSM_Model_M->solverInfo, false);
@@ -423,6 +453,21 @@ void modifiedPMSM_Model_initialize(void)
 
   /* InitializeConditions for Integrator: '<S1>/Integrator2' */
   modifiedPMSM_Model_X.Integrator2_CSTATE = 314.15926535897933;
+
+  /* InitializeConditions for root-level periodic continuous states */
+  {
+    int_T rootPeriodicContStateIndices[1] = { 1 };
+
+    real_T rootPeriodicContStateRanges[2] = { -3.1415926535897931,
+      3.1415926535897931 };
+
+    (void) memcpy((void*)modifiedPMSM_Model_PeriodicIndX,
+                  rootPeriodicContStateIndices,
+                  1*sizeof(int_T));
+    (void) memcpy((void*)modifiedPMSM_Model_PeriodicRngX,
+                  rootPeriodicContStateRanges,
+                  2*sizeof(real_T));
+  }
 }
 
 /* Model terminate function */
@@ -430,3 +475,9 @@ void modifiedPMSM_Model_terminate(void)
 {
   /* (no terminate code required) */
 }
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

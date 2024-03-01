@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\clara\Documents\University\McSCert\modifiedPMSM_Model_ert_rtw\CMakeFiles\a99ea9b8d4eb70f51af108b1a92e4031\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8B32F04D-172D-315B-BBE9-311A4E2FC2B3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

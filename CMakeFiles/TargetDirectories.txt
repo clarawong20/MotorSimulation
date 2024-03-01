@@ -1,0 +1,6 @@
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/modifiedPMSM_Model_objects.dir
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/modifiedPMSM_Model.dir
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/Motor_Simulation.dir
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/INSTALL.dir
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/ALL_BUILD.dir
+C:/Users/clara/Documents/University/McSCert/modifiedPMSM_Model_ert_rtw/CMakeFiles/ZERO_CHECK.dir

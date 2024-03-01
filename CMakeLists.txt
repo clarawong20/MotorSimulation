@@ -159,3 +159,15 @@ add_custom_command(TARGET modifiedPMSM_Model POST_BUILD
 if(COMMAND toolchain_target_hook)
     toolchain_target_hook(modifiedPMSM_Model)
 endif()
+
+
+
+
+
+
+
+
+
+
+
+
