@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.14
+ * Model version                  : 2.24
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Fri Nov 17 16:35:33 2023
+ * C/C++ source code generated on : Wed Mar  6 10:13:18 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -19,54 +19,49 @@
 
 #include <stddef.h>
 #include <stdio.h>            /* This example main program uses printf/fflush */
-#include "rtwtypes.h"
 #include "modifiedPMSM_Model.h"        /* Model header file */
-#include <time.h>
 
-
-
- /*
-  * Associating rt_OneStep with a real-time clock or interrupt service routine
-  * is what makes the generated code "real-time".  The function rt_OneStep is
-  * always associated with the base rate of the model.  Subrates are managed
-  * by the base rate from inside the generated code.  Enabling/disabling
-  * interrupts and floating point context switches are target specific.  This
-  * example code indicates where these should take place relative to executing
-  * the generated code step function.  Overrun behavior should be tailored to
-  * your application needs.  This example simply sets an error status in the
-  * real-time model and returns from rt_OneStep.
-  */
+/*
+ * Associating rt_OneStep with a real-time clock or interrupt service routine
+ * is what makes the generated code "real-time".  The function rt_OneStep is
+ * always associated with the base rate of the model.  Subrates are managed
+ * by the base rate from inside the generated code.  Enabling/disabling
+ * interrupts and floating point context switches are target specific.  This
+ * example code indicates where these should take place relative to executing
+ * the generated code step function.  Overrun behavior should be tailored to
+ * your application needs.  This example simply sets an error status in the
+ * real-time model and returns from rt_OneStep.
+ */
 void rt_OneStep(void);
 void rt_OneStep(void)
 {
-    static boolean_T OverrunFlag = false;
+  static boolean_T OverrunFlag = false;
 
-    /* Disable interrupts here */
+  /* Disable interrupts here */
 
-    /* Check for overrun */
-    if (OverrunFlag) {
-        rtmSetErrorStatus(modifiedPMSM_Model_M, "Overrun");
-        return;
-    }
+  /* Check for overrun */
+  if (OverrunFlag) {
+    rtmSetErrorStatus(modifiedPMSM_Model_M, "Overrun");
+    return;
+  }
 
-    OverrunFlag = true;
+  OverrunFlag = true;
 
-    /* Save FPU context here (if necessary) */
-    /* Re-enable timer or interrupt here */
-    /* Set model inputs here */
-    
+  /* Save FPU context here (if necessary) */
+  /* Re-enable timer or interrupt here */
+  /* Set model inputs here */
 
-    /* Step the model */
-    modifiedPMSM_Model_step();     
+  /* Step the model */
+  modifiedPMSM_Model_step();
 
-    /* Get model outputs here */
+  /* Get model outputs here */
 
-    /* Indicate task complete */
-    OverrunFlag = false;
+  /* Indicate task complete */
+  OverrunFlag = false;
 
-    /* Disable interrupts here */
-    /* Restore FPU context here (if necessary) */
-    /* Enable interrupts here */
+  /* Disable interrupts here */
+  /* Restore FPU context here (if necessary) */
+  /* Enable interrupts here */
 }
 
 /*
@@ -75,85 +70,76 @@ void rt_OneStep(void)
  * Attaching rt_OneStep to a real-time clock is target specific. This example
  * illustrates how you do this relative to initializing the model.
  */
-int_T main(int_T argc, const char* argv[])
+int_T main(int_T argc, const char *argv[])
 {
-    /* Unused arguments */
-    (void)(argc);
-    (void)(argv);
+  /* Unused arguments */
+  (void)(argc);
+  (void)(argv);
 
-    /* Initialize model */
-    modifiedPMSM_Model_initialize();
+  /* Initialize model */
+  modifiedPMSM_Model_initialize();
 
-    double simulationTime = 1;
-    double currentTime = 0;
-    double timeStep = 2.5E-7;
+  double simulationTime = 1;
+  double currentTime = 0;
+  double timeStep = 2.5E-7;
 
-    // ADDED for sine wave
-    const float pi = 3.1415926535;
-    const double sine_amplitude = 0.5;
-    const double vertical_shift = 0.5;
-    const double phase_offset_2 = 1.0 * 2.0 * pi / 3.0; //120 degree phase offset in radians 
-    const double phase_offset_3 = 2.0 * 2.0 * pi / 3.0;
+  // ADDED for sine wave
+  const float pi = 3.1415926535;
+  const double sine_amplitude = 0.5;
+  const double vertical_shift = 0.5;
+  const double phase_offset_2 = 1.0 * 2.0 * pi / 3.0; //120 degree phase offset in radians 
+  const double phase_offset_3 = 2.0 * 2.0 * pi / 3.0;
+
+  /* Simulating the model step behavior (in non real-time) to
+   *  simulate model behavior at stop time.
+   */
+   // export .csv
+  FILE* file = fopen("sine_wave_data.csv", "w");
+  if (file == NULL) {
+      printf("error opening file");
+      return -1;
+  }
+
+  fprintf(file, "Time, ThetaOutput, OmegaOutput, TmOutput, WmOutput, labcOutput0, labcOutput1, labcOutput2\n");
+
+  /* Simulating the model step behavior (in non real-time) to
+   *  simulate model behavior at stop time.
+   */
+  int loop_counter = 0;
+  while ((rtmGetErrorStatus(modifiedPMSM_Model_M) == (NULL)) && currentTime < simulationTime) {
+
+      double Sine_Input = 10.0 * currentTime; // 10 rad/s
+
+      /* Set duty cycles in the external input structure */
+      for (int i = 0; i < 3; i++) {
+          modifiedPMSM_Model_U.DutyCycles[i] = sine_amplitude * sin(Sine_Input + ((i + 1) * 2.0 * pi / 3)) + vertical_shift;
+      }
+
+      /* Step the model with external inputs */
+      modifiedPMSM_Model_step(&modifiedPMSM_Model_U);
 
 
-    /*
-    rtb_Product1_p = sine_wave_1;
-    rtb_Product1_mi = sine_wave_2;
-    rtb_Product1_d = sine_wave_3;
+      if (loop_counter % 1000 == 0) {
+          printf("Debug: labcOutput values - %f, %f, %f\n", modifiedPMSM_Model_Y.labcOutput[0], modifiedPMSM_Model_Y.labcOutput[1], modifiedPMSM_Model_Y.labcOutput[2]);
+          fprintf(file, "%f,%f,%f,%f,%f,%f\n",
+              /* for showing the duty cycle sine wave in the excel file */
+              //currentTime, modifiedPMSM_Model_U.DutyCycles[0], modifiedPMSM_Model_U.DutyCycles[1], modifiedPMSM_Model_U.DutyCycles[2]);
 
-    modifiedPMSM_Model_Y.SineWave1 = sine_wave_1;
-    modifiedPMSM_Model_Y.SineWave2 = sine_wave_2;
-    modifiedPMSM_Model_Y.SineWave3 = sine_wave_3;
-    */
+              /* for showing the outputs in the excel file */
+              currentTime, modifiedPMSM_Model_Y.ThetaOutput, modifiedPMSM_Model_Y.OmegaOutput, modifiedPMSM_Model_Y.TmOutput, modifiedPMSM_Model_Y.WmOutput, modifiedPMSM_Model_Y.labcOutput[0], modifiedPMSM_Model_Y.labcOutput[1], modifiedPMSM_Model_Y.labcOutput[2]);
+      }
+      rt_OneStep();
+      currentTime += timeStep;
+      loop_counter += 1;
 
-    // export .csv
-    FILE* file = fopen("sine_wave_data.csv", "w");
-    if (file == NULL) {
-        printf("error opening file");
-        return -1;
-    }
+  }
 
-    fprintf(file, "Time, ThetaOutput\n");
+  fclose(file);
 
-    /* Simulating the model step behavior (in non real-time) to
-     *  simulate model behavior at stop time.
-     */
-    int loop_counter = 0;
-    while ((rtmGetErrorStatus(modifiedPMSM_Model_M) == (NULL)) && currentTime < simulationTime) {
-        
-        double Sine_Input = 10.0 * currentTime; // 10 rad/s
-                
-        /* Set duty cycles in the external input structure */
-        for (int i = 0; i < 3; i++) {
-            modifiedPMSM_Model_U.DutyCycles[i] = sine_amplitude * sin(Sine_Input + ((i + 1) * 2.0 * pi / 3)) + vertical_shift;
-        }
 
-        /* Step the model with external inputs */
-        modifiedPMSM_Model_step(&modifiedPMSM_Model_U);
-
-        
-        if (loop_counter % 1000 == 0) {
-            fprintf(file, "%f,%f\n",
-            /* for showing the duty cycle sine wave in the excel file */
-            //currentTime, modifiedPMSM_Model_U.DutyCycles[0], modifiedPMSM_Model_U.DutyCycles[1], modifiedPMSM_Model_U.DutyCycles[2]);
-            
-            /* for showing the theta output in the excel file */
-            currentTime, modifiedPMSM_Model_Y.ThetaOutput);
-        }
-        rt_OneStep();
-        currentTime += timeStep;
-        loop_counter += 1;
-        
-    }
-
-    fclose(file);
-
-    //TODO: output sin wave for all 3 pwm periods. Offset by 120 (sin waves equally spaced out)
-
-    /* Terminate model */
-    modifiedPMSM_Model_terminate();
-
-    return 0;
+  /* Terminate model */
+  modifiedPMSM_Model_terminate();
+  return 0;
 }
 
 /*

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.21
+ * Model version                  : 2.24
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Fri Feb 16 17:19:11 2024
+ * C/C++ source code generated on : Wed Mar  6 10:13:18 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -140,6 +140,10 @@ typedef struct {
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T ThetaOutput;                  /* '<Root>/Output' */
+  real_T labcOutput[3];                /* '<Root>/labcOutput' */
+  real_T OmegaOutput;                  /* '<Root>/OmegaOutput' */
+  real_T TmOutput;                     /* '<Root>/TmOutput' */
+  real_T WmOutput;                     /* '<Root>/WmOutput' */
 } ExtY_modifiedPMSM_Model_T;
 
 /* Real-time Model Data Structure */
@@ -219,7 +223,6 @@ extern RT_MODEL_modifiedPMSM_Model_T *const modifiedPMSM_Model_M;
  * Block '<Root>/Position' : Unused code path elimination
  * Block '<Root>/Pulse Generator' : Unused code path elimination
  * Block '<Root>/Scope2' : Unused code path elimination
- * Block '<Root>/Speed(rpm)' : Unused code path elimination
  * Block '<S3>/Sum' : Unused code path elimination
  * Block '<S13>/Data Type Conversion' : Unused code path elimination
  * Block '<S13>/Product2' : Unused code path elimination
