@@ -91,24 +91,6 @@ if(WIN32)
        advapi32)
 endif()
 
-
-add_executable(MotorSimulation  
-    ert_main.c 
-)
-set_target_properties(MotorSimulation PROPERTIES
-    PREFIX ""
-    POSITION_INDEPENDENT_CODE ON)
-target_compile_features(MotorSimulation PUBLIC c_std_99)
-target_compile_definitions(MotorSimulation PRIVATE ${MODIFIEDPMSM_MODEL_COMMON_DEFINES})
-target_compile_options(MotorSimulation PRIVATE ${MODIFIEDPMSM_MODEL_COMMON_COMPILER_FLAGS})
-target_link_libraries(MotorSimulation PRIVATE modifiedPMSM_Model_objects)
-if(WIN32)
-   target_link_libraries(MotorSimulation PRIVATE kernel32
-       ws2_32
-       mswsock
-       advapi32)
-endif()
-
 ######################################################################
 ## Extract debug symbols
 ######################################################################
@@ -159,15 +141,3 @@ add_custom_command(TARGET modifiedPMSM_Model POST_BUILD
 if(COMMAND toolchain_target_hook)
     toolchain_target_hook(modifiedPMSM_Model)
 endif()
-
-
-
-
-
-
-
-
-
-
-
-

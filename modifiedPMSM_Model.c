@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'modifiedPMSM_Model'.
  *
- * Model version                  : 2.21
+ * Model version                  : 2.24
  * Simulink Coder version         : 9.9 (R2023a) 19-Nov-2022
- * C/C++ source code generated on : Fri Feb 16 17:19:11 2024
+ * C/C++ source code generated on : Wed Mar  6 10:13:18 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -134,9 +134,9 @@ static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
 }
 
 /* Model step function */
-void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
+void modifiedPMSM_Model_step(void)
 {
-  real_T rtb_TmpSignalConversionAtGain_j[3];
+  real_T tmp[3];
   real_T rtb_alpha_beta[2];
   real_T rtb_Gain;
   real_T rtb_Gain1;
@@ -202,7 +202,7 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
   rtb_Product1_mi = rtb_Gain1 * rtb_Product2_n + rtb_Product3_g * rtb_Gain;
   for (i = 0; i <= 0; i += 2) {
     /* Gain: '<S6>/Gain1' */
-    _mm_storeu_pd(&rtb_TmpSignalConversionAtGain_j[i], _mm_add_pd(_mm_mul_pd
+    _mm_storeu_pd(&modifiedPMSM_Model_Y.labcOutput[i], _mm_add_pd(_mm_mul_pd
       (_mm_loadu_pd(&modifiedPMSM_Model_ConstP.Gain1_Gain_p[i + 3]), _mm_set1_pd
        (rtb_Product1_mi)), _mm_mul_pd(_mm_loadu_pd
       (&modifiedPMSM_Model_ConstP.Gain1_Gain_p[i]), _mm_set1_pd(rtb_Product1_p))));
@@ -210,7 +210,7 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
 
   /* Gain: '<S6>/Gain1' */
   for (i = 2; i < 3; i++) {
-    rtb_TmpSignalConversionAtGain_j[i] =
+    modifiedPMSM_Model_Y.labcOutput[i] =
       modifiedPMSM_Model_ConstP.Gain1_Gain_p[i + 3] * rtb_Product1_mi +
       modifiedPMSM_Model_ConstP.Gain1_Gain_p[i] * rtb_Product1_p;
   }
@@ -238,7 +238,7 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
    *  RelationalOperator: '<S16>/Compare'
    */
   rtb_Product1_p = modifiedPMSM_Model_ConstP.pooled2[((((uint32_T)
-    (rtb_TmpSignalConversionAtGain_j[0] > 0.0) << 1) + rtb_RelationalOperator2) <<
+    (modifiedPMSM_Model_Y.labcOutput[0] > 0.0) << 1) + rtb_RelationalOperator2) <<
     1) + (uint32_T)!rtb_RelationalOperator2] * 800.0;
 
   /* RelationalOperator: '<S2>/Relational Operator1' incorporates:
@@ -254,7 +254,7 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
    *  RelationalOperator: '<S17>/Compare'
    */
   rtb_Product1_mi = modifiedPMSM_Model_ConstP.pooled2[((((uint32_T)
-    (rtb_TmpSignalConversionAtGain_j[1] > 0.0) << 1) + rtb_RelationalOperator2) <<
+    (modifiedPMSM_Model_Y.labcOutput[1] > 0.0) << 1) + rtb_RelationalOperator2) <<
     1) + (uint32_T)!rtb_RelationalOperator2] * 800.0;
 
   /* RelationalOperator: '<S2>/Relational Operator2' incorporates:
@@ -271,15 +271,15 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
    *  RelationalOperator: '<S18>/Compare'
    */
   rtb_Product1_d = modifiedPMSM_Model_ConstP.pooled2[((((uint32_T)
-    (rtb_TmpSignalConversionAtGain_j[2] > 0.0) << 1) + rtb_RelationalOperator2) <<
+    (modifiedPMSM_Model_Y.labcOutput[2] > 0.0) << 1) + rtb_RelationalOperator2) <<
     1) + (uint32_T)!rtb_RelationalOperator2] * 800.0;
   for (i = 0; i <= 0; i += 2) {
     /* Gain: '<S1>/Gain1' incorporates:
      *  SignalConversion generated from: '<S1>/Gain1'
      */
-    _mm_storeu_pd(&rtb_TmpSignalConversionAtGain_j[i], _mm_add_pd(_mm_add_pd
-      (_mm_mul_pd(_mm_loadu_pd(&modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 3]),
-                  _mm_set1_pd(rtb_Product1_mi)), _mm_mul_pd(_mm_loadu_pd
+    _mm_storeu_pd(&tmp[i], _mm_add_pd(_mm_add_pd(_mm_mul_pd(_mm_loadu_pd
+      (&modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 3]), _mm_set1_pd
+      (rtb_Product1_mi)), _mm_mul_pd(_mm_loadu_pd
       (&modifiedPMSM_Model_ConstP.Gain1_Gain_b[i]), _mm_set1_pd(rtb_Product1_p))),
       _mm_mul_pd(_mm_loadu_pd(&modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 6]),
                  _mm_set1_pd(rtb_Product1_d))));
@@ -289,16 +289,15 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
    *  SignalConversion generated from: '<S1>/Gain1'
    */
   for (i = 2; i < 3; i++) {
-    rtb_TmpSignalConversionAtGain_j[i] =
-      (modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 3] * rtb_Product1_mi +
-       modifiedPMSM_Model_ConstP.Gain1_Gain_b[i] * rtb_Product1_p) +
+    tmp[i] = (modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 3] * rtb_Product1_mi +
+              modifiedPMSM_Model_ConstP.Gain1_Gain_b[i] * rtb_Product1_p) +
       modifiedPMSM_Model_ConstP.Gain1_Gain_b[i + 6] * rtb_Product1_d;
   }
 
   /* Gain: '<S5>/Gain3' */
-  rtb_Product1_p = rtb_TmpSignalConversionAtGain_j[1];
-  rtb_Product1_mi = rtb_TmpSignalConversionAtGain_j[0];
-  rtb_Product1_d = rtb_TmpSignalConversionAtGain_j[2];
+  rtb_Product1_p = tmp[1];
+  rtb_Product1_mi = tmp[0];
+  rtb_Product1_d = tmp[2];
   for (i = 0; i <= 0; i += 2) {
     /* Gain: '<S5>/Gain3' */
     _mm_storeu_pd(&rtb_alpha_beta[i], _mm_add_pd(_mm_add_pd(_mm_mul_pd
@@ -323,16 +322,29 @@ void modifiedPMSM_Model_step(const ExtU_modifiedPMSM_Model_T *externalInputs)
    *  Sum: '<S5>/Sum1'
    */
   modifiedPMSM_Model_B.dTheta = 4.0 * modifiedPMSM_Model_X.Integrator2_CSTATE;
+  modifiedPMSM_Model_Y.TmOutput = (modifiedPMSM_Model_X.Integrator_CSTATE *
+    rtb_Gain - modifiedPMSM_Model_X.Integrator1_CSTATE * rtb_Gain1) * 6.0;
   modifiedPMSM_Model_B.dPsid = ((rtb_alpha_beta[0] * rtb_Product3_g +
     rtb_alpha_beta[1] * rtb_Product2_n) - 0.06 * rtb_Gain1) +
     modifiedPMSM_Model_B.dTheta * modifiedPMSM_Model_X.Integrator1_CSTATE;
   modifiedPMSM_Model_B.dPsiq = ((rtb_Product3_g * rtb_alpha_beta[1] -
     rtb_alpha_beta[0] * rtb_Product2_n) - 0.06 * rtb_Gain) -
     modifiedPMSM_Model_B.dTheta * modifiedPMSM_Model_X.Integrator_CSTATE;
-  modifiedPMSM_Model_B.dOmega = (((modifiedPMSM_Model_X.Integrator_CSTATE *
-    rtb_Gain - modifiedPMSM_Model_X.Integrator1_CSTATE * rtb_Gain1) * 6.0 - 0.01
-    * modifiedPMSM_Model_X.Integrator2_CSTATE) - 0.5 *
+  modifiedPMSM_Model_B.dOmega = ((modifiedPMSM_Model_Y.TmOutput - 0.01 *
+    modifiedPMSM_Model_X.Integrator2_CSTATE) - 0.5 *
     modifiedPMSM_Model_X.Integrator2_CSTATE) / 0.1;
+
+  /* Outport: '<Root>/OmegaOutput' incorporates:
+   *  Gain: '<Root>/Speed(rpm)'
+   *  Integrator: '<S1>/Integrator2'
+   */
+  modifiedPMSM_Model_Y.OmegaOutput = 9.5492965855137211 *
+    modifiedPMSM_Model_X.Integrator2_CSTATE;
+
+  /* Outport: '<Root>/WmOutput' incorporates:
+   *  Integrator: '<S1>/Integrator2'
+   */
+  modifiedPMSM_Model_Y.WmOutput = modifiedPMSM_Model_X.Integrator2_CSTATE;
 
   /* Outport: '<Root>/Output' incorporates:
    *  Integrator: '<S1>/Integrator3'
